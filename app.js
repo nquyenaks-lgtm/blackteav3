@@ -71,36 +71,46 @@ let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
   { id: 46, name: "Sữa chua Xoài", price: 25000, cat: "Sữa chua" },
 
   // --- Giải khát ---
-  { id: 42, name: "Bò húc", price: 18000, cat: "Giải khát" },
-  { id: 43, name: "Nước các loại", price: 15000, cat: "Giải khát" },
-  { id: 44, name: "Soda gum", price: 25000, cat: "Giải khát" },
-  { id: 45, name: "Cocktail", price: 15000, cat: "Giải khát" },
+  { id: 47, name: "Bò húc", price: 18000, cat: "Giải khát" },
+  { id: 48, name: "Nước các loại", price: 15000, cat: "Giải khát" },
+  { id: 49, name: "Soda gum", price: 25000, cat: "Giải khát" },
+  { id: 50, name: "Cocktail", price: 15000, cat: "Giải khát" },
+  { id: 51, name: "Chanh đá", price: 15000, cat: "Giải khát" },
+  { id: 52, name: "Chanh muối", price: 15000, cat: "Giải khát" },
 
   // --- Trà & Nước ép ---
-  { id: 46, name: "Trà gừng", price: 15000, cat: "Trà & Nước ép" },
-  { id: 47, name: "Trà Lipton ngũ sắc", price: 20000, cat: "Trà & Nước ép" },
-  { id: 48, name: "Trà thảo mộc", price: 25000, cat: "Trà & Nước ép" },
-  { id: 49, name: "Trà đào size (M)", price: 15000, cat: "Trà & Nước ép" },
-  { id: 50, name: "Trà đào size (L)", price: 20000, cat: "Trà & Nước ép" },
-  { id: 51, name: "Rau má đậu xanh size (M)", price: 15000, cat: "Trà & Nước ép" },
-  { id: 52, name: "Rau má đậu xanh size (L)", price: 20000, cat: "Trà & Nước ép" },
-  { id: 53, name: "Đậu xanh cốt dừa (M)", price: 20000, cat: "Trà & Nước ép" },
-  { id: 54, name: "Đậu xanh cốt dừa (L)", price: 25000, cat: "Trà & Nước ép" },
-
+  { id: 53, name: "Trà gừng", price: 15000, cat: "Trà & Nước ép" },
+  { id: 54, name: "Trà Lipton ngũ sắc", price: 20000, cat: "Trà & Nước ép" },
+  { id: 55, name: "Trà thảo mộc", price: 25000, cat: "Trà & Nước ép" },
+  { id: 56, name: "Trà đào (Size M)", price: 15000, cat: "Trà & Nước ép" },
+  { id: 57, name: "Trà đào (Size L)", price: 20000, cat: "Trà & Nước ép" },
+  { id: 58, name: "Rau má đậu xanh (Size M)", price: 15000, cat: "Trà & Nước ép" },
+  { id: 59, name: "Rau má đậu xanh (Size L)", price: 20000, cat: "Trà & Nước ép" },
+  { id: 60, name: "Đậu xanh cốt dừa (Size M)", price: 20000, cat: "Trà & Nước ép" },
+  { id: 61, name: "Đậu xanh cốt dừa (Size L)", price: 25000, cat: "Trà & Nước ép" },
+  { id: 62, name: "Nước ép cà rốt ", price: 25000, cat: "Trà & Nước ép" },
+  { id: 63, name: "Nước ép cam", price: 25000, cat: "Trà & Nước ép" },
+  { id: 64, name: "Nước ép táo", price: 25000, cat: "Trà & Nước ép" },
+  { id: 65, name: "Nước ép cam + cà rốt ", price: 25000, cat: "Trà & Nước ép" },
+  { id: 66, name: "Nước ép cam + dừa", price: 25000, cat: "Trà & Nước ép" },
+  { id: 67, name: "Nước ép cà rốt + dừa", price: 25000, cat: "Trà & Nước ép" },
   // --- Matcha ---
-  { id: 42, name: "Matcha sữa xoài ", price: 25000, cat: "Matcha " },
-  { id: 43, name: "Matcha khoai môn", price: 25000, cat: "Matcha " },
-  { id: 44, name: "Matcha sữa dừa", price: 25000, cat: "Matcha " },
-
+  { id: 68, name: "Matcha sữa xoài ", price: 25000, cat: "Matcha" },
+  { id: 69, name: "Matcha khoai môn", price: 25000, cat: "Matcha" },
+  { id: 70, name: "Matcha sữa dừa", price: 25000, cat: "Matcha" },
+  // --- Ăn vặt ---
+  { id: 71, name: "Bánh tráng ruốc nhỏ ", price: 17000, cat: "Ăn vặt " },
+  { id: 72, name: "Bánh tráng ruốc lớn", price: 30000, cat: "Ăn vặt " },
+  { id: 73, name: "Bánh tráng chấm", price: 15000, cat: "Ăn vặt " },
   // --- Topping ---
-  { id: 46, name: "Thêm topping", price: 5000, cat: "Topping" },
-  { id: 47, name: "Kem cheese", price: 5000, cat: "Topping" },
-  { id: 48, name: "Trứng nướng", price: 5000, cat: "Topping" },
-  { id: 49, name: "Kem lăng", price: 5000, cat: "Topping" },
-  { id: 50, name: "Kem lăng dừa", price: 15000, cat: "Topping" }
+  { id: 74, name: "Thêm topping", price: 5000, cat: "Topping" },
+  { id: 75, name: "Kem cheese", price: 5000, cat: "Topping" },
+  { id: 76, name: "Trứng nướng", price: 5000, cat: "Topping" },
+  { id: 77, name: "Kem lăng", price: 5000, cat: "Topping" },
+  { id: 78, name: "Kem lăng dừa", price: 15000, cat: "Topping" }
 ];
 
-let CATEGORIES = JSON.parse(localStorage.getItem(KEY_CATS)) || ["Tất cả","Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Topping"];
+let CATEGORIES = JSON.parse(localStorage.getItem(KEY_CATS)) || ["Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Trà & Nước ép","Matcha","Ăn vặt","Topping"];
 let TABLES = JSON.parse(localStorage.getItem(KEY_TABLES)) || [];
 let HISTORY = JSON.parse(localStorage.getItem(KEY_HISTORY)) || [];
 let GUEST_CNT = parseInt(localStorage.getItem(KEY_GUEST) || '0');
