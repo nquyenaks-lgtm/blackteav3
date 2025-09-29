@@ -96,9 +96,9 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
 }
 
 .table-select-list button {
-  min-width: 80px;
-  min-height: 50px;
-  font-size: 16px;
+  min-width: 100px;
+  min-height: 60px;
+  font-size: 18px;
   background: #f0f0f0; /* xám nhạt mặc định */
   color: #222;
   border: 1px solid #ccc;
@@ -124,3 +124,16 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   margin-top: 10px;
 }
 
+/* Nút khách */
+.guest-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.guest-buttons button {
+  flex: 1;               /* chia đều chiều ngang */
+  font-size: 16px;       /* chữ rõ hơn */
+  padding: 14px 0;       /* chiều cao vừa đẹp */
+  border-radius: 8px;
+}
