@@ -95,14 +95,42 @@ function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=
 function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
 
-// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
-function renderTables(){
+// render tables
+function renderTables() {
   const div = $('tables');
   div.innerHTML = '';
-  if(!TABLES.length){
+  if (!TABLES.length) {
     div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
     return;
   }
+  TABLES.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'table-card';
+
+    const info = document.createElement('div');
+    info.className = 'table-info';
+
+    // dòng tên bàn
+    const name = document.createElement('div');
+    name.className = 'table-name';
+    name.innerText = t.name;
+    info.appendChild(name);
+
+    // dòng số món + tổng tiền (nếu có)
+    if (t.cart && t.cart.length) {
+      let qty = 0, total = 0;
+      t.cart.forEach(it => { qty += it.qty; total += it.qty * it.price; });
+      const meta = document.createElement('div');
+      meta.className = 'table-meta';
+      meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
+      info.appendChild(meta);
+    }
+
+    card.appendChild(info);
+    card.onclick = () => openTableFromMain(t.id);
+    div.appendChild(card);
+  });
+}
 
   // nhóm L (4 cột)
   const groupL = TABLES.filter(t => t.name.startsWith('L'))
