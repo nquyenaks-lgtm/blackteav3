@@ -99,17 +99,24 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   min-width: 80px;
   min-height: 50px;
   font-size: 16px;
-  background: #007bff; /* xanh */
-  color: #fff;
-  border: none;
+  background: #f0f0f0; /* xám nhạt mặc định */
+  color: #222;
+  border: 1px solid #ccc;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, color 0.3s;
+}
+
+.table-select-list button.active {
+  background: #2b6ef6; /* xanh khi chọn */
+  color: #fff;
+  border-color: #2b6ef6;
 }
 
 .table-select-list button:hover {
-  background: #0056b3; /* xanh đậm khi hover */
+  background: #ddd; /* xám đậm khi hover */
 }
+
 
 /* nút đóng modal */
 .table-select-list .btn-danger {

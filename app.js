@@ -95,26 +95,83 @@ function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=
 function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
 
-// render tables
+// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
 function renderTables(){
-  const div = $('tables'); div.innerHTML = '';
-  if(!TABLES.length){ div.innerHTML = '<div class="small">Chưa có bàn nào</div>'; return; }
-  TABLES.forEach(t=>{
-    const card = document.createElement('div'); card.className='table-card';
-    const info = document.createElement('div'); info.className='table-info';
-    const name = document.createElement('div'); name.className='table-name'; name.innerText = t.name;
-    info.appendChild(name);
-    if(t.cart && t.cart.length){
-      let qty=0, total=0; t.cart.forEach(it=>{ qty+=it.qty; total+=it.qty*it.price; });
-      const meta = document.createElement('div'); meta.className='table-meta'; meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
-      info.appendChild(meta);
-    }
-    card.appendChild(info);
-    card.onclick = ()=> openTableFromMain(t.id);
-    div.appendChild(card);
+  const div = $('tables');
+  div.innerHTML = '';
+  if(!TABLES.length){
+    div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
+    return;
+  }
+
+  // nhóm L (4 cột)
+  const groupL = TABLES.filter(t => t.name.startsWith('L'))
+                       .sort((a,b)=> a.name.localeCompare(b.name));
+  if(groupL.length){
+    const row = document.createElement('div');
+    row.className = 'table-section table-section-4';
+    groupL.forEach(t => row.appendChild(makeTableCard(t)));
+    div.appendChild(row);
+  }
+
+  // nhóm NT (2 cột)
+  const groupNT = TABLES.filter(t => t.name.startsWith('NT'))
+                        .sort((a,b)=> a.name.localeCompare(b.name));
+  if(groupNT.length){
+    const row = document.createElement('div');
+    row.className = 'table-section table-section-2';
+    groupNT.forEach(t => row.appendChild(makeTableCard(t)));
+    div.appendChild(row);
+  }
+
+  // nhóm T, G, N (mỗi bàn một hàng dọc)
+  ['T','G','N'].forEach(prefix=>{
+    const g = TABLES.filter(t => t.name.startsWith(prefix))
+                    .sort((a,b)=> a.name.localeCompare(b.name));
+    g.forEach(t=>{
+      const row = document.createElement('div');
+      row.className = 'table-section table-section-1';
+      row.appendChild(makeTableCard(t));
+      div.appendChild(row);
+    });
   });
 }
 
+// helper tạo thẻ bàn (dùng trong renderTables)
+function makeTableCard(t){
+  const card = document.createElement('div');
+  card.className = 'table-card';
+
+  const info = document.createElement('div');
+  info.className = 'table-info';
+
+  const name = document.createElement('div');
+  name.className = 'table-name';
+  name.innerText = t.name;
+  info.appendChild(name);
+
+  if(t.cart && t.cart.length){
+    let qty=0, total=0;
+    t.cart.forEach(it=>{ qty += it.qty; total += it.qty * it.price; });
+    const meta = document.createElement('div');
+    meta.className = 'table-meta';
+    meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
+    info.appendChild(meta);
+  }
+
+  card.appendChild(info);
+
+  // click: highlight + mở bàn
+  card.onclick = ()=> {
+    document.querySelectorAll('.table-card').forEach(c=>{
+      c.classList.remove('active');
+    });
+    card.classList.add('active');
+    openTableFromMain(t.id);
+  };
+
+  return card;
+}
 // add guest
 function addGuest(){
   GUEST_CNT += 1;
