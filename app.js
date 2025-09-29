@@ -126,7 +126,7 @@ function renderTables(){
 
   // nhóm T, G, N (mỗi bàn một hàng dọc)
   ['T','G','N'].forEach(prefix=>{
-    const g = TABLES.filter(t => t.name.startsWith(prefix) && !(prefix === 'N' && t.name.startsWith 'NT' )))
+    const g = TABLES.filter(t => t.name.startsWith(prefix) && !(prefix === 'N' && t.name.startsWith('NT')))
                     .sort((a,b)=> a.name.localeCompare(b.name));
     g.forEach(t=>{
       const row = document.createElement('div');
