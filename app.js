@@ -95,7 +95,7 @@ function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=
 function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
 
-// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
+// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc, khác = Bàn tạm)
 function renderTables(){
   const div = $('tables');
   div.innerHTML = '';
@@ -135,7 +135,24 @@ function renderTables(){
       div.appendChild(row);
     });
   });
+
+  // ===== nhóm "khác" (bàn tạm, khách mang đi, khách ghé quán, tên do người dùng) =====
+  const others = TABLES.filter(t =>
+    !t.name.startsWith('L') &&
+    !t.name.startsWith('NT') &&
+    !t.name.startsWith('T') &&
+    !t.name.startsWith('G') &&
+    !t.name.startsWith('N')
+  ).sort((a,b)=> a.name.localeCompare(b.name));
+
+  if(others.length){
+    const row = document.createElement('div');
+    row.className = 'table-section table-section-others';
+    others.forEach(t => row.appendChild(makeTableCard(t)));
+    div.appendChild(row);
+  }
 }
+
 
 // helper tạo thẻ bàn (dùng trong renderTables)
 function makeTableCard(t){
@@ -292,16 +309,19 @@ function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!current
 // primary actions (new table)
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
-function saveOrder(){
-  if(!currentTable) return;
-  if(!currentTable.cart.length){ return; }
+function saveOrder() {
+  if (!currentTable) return;
+  if (!currentTable.cart.length) return;
 
-  // tạo object mới để đảm bảo localStorage và render cập nhật
-  TABLES = TABLES.map(t =>
-      t.id === currentTable.id
-          ? { ...currentTable }    // clone object hiện tại
-          : t
-  );
+  const idx = TABLES.findIndex(t => t.id === currentTable.id);
+
+  if (idx >= 0) {
+    // Nếu bàn đã tồn tại → cập nhật lại
+    TABLES[idx] = { ...currentTable };
+  } else {
+    // Nếu bàn chưa tồn tại (VD: Khách mang đi) → thêm mới
+    TABLES.push({ ...currentTable });
+  }
 
   saveAll();
   renderTables();
