@@ -586,19 +586,6 @@ function openTableModal() {
   confirmBtn.innerText = 'Chọn bàn';
   confirmBtn.className = 'btn btn-primary';
   confirmBtn.onclick = () => {
-  if (!selectedTable) {
-    alert("Vui lòng chọn một bàn trước!");
-    return;
-  }
-  const name = selectedTable.innerText;
-  let existing = TABLES.find(t => t.name === name);
-  if (existing) {
-    document.body.removeChild(list);
-    createdFromMain = false;
-    openTable(existing.id);
-    return;
-  }
-
     if (!selectedTable) {
       alert("Vui lòng chọn một bàn trước!");
       return;
