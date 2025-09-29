@@ -296,7 +296,7 @@ function saveOrder(){
   if(!currentTable) return;
   if(!currentTable.cart.length){ return; }
 
-  // ✅ Sửa chỗ này: tạo object mới để đảm bảo localStorage và render cập nhật
+  localStorage và render cập nhật
   TABLES = TABLES.map(t =>
       t.id === currentTable.id
           ? { ...currentTable }    // clone object hiện tại
