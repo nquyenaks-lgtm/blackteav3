@@ -137,3 +137,14 @@ input,select{padding:8px;border:1px solid #ccc;border-radius:6px}
   padding: 14px 0;       /* chiều cao vừa đẹp */
   border-radius: 8px;
 }
+.cart-list li {
+  border-bottom: 1px dashed #bbb;  /* màu nhạt hơn (#bbb) */
+  border-image: repeating-linear-gradient(
+    to right,
+    #bbb 0,
+    #bbb 2px,     /* gạch ngắn hơn */
+    transparent 2px,
+    transparent 5px /* khoảng cách ngắn */
+  ) 1;
+  padding: 6px 0;
+}
