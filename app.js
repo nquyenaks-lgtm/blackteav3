@@ -5,6 +5,14 @@ const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
 const KEY_HISTORY = 'BT8_HISTORY';
 const KEY_GUEST = 'BT8_GUEST_CNT';
+const FIXED_TABLES = [
+  "L1","L2","L3","L4",
+  "NT1","NT2",
+  "T1","G1","N1",
+  "T2","G2","N2",
+  "T3","G3","N3",
+  "T4","G4","N4"
+];
 
 let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
   // --- Cà phê ---
@@ -380,10 +388,55 @@ function renderHistory(){
   });
 }
 
+// hiện danh sách bàn để chọn
+function openTableModal() {
+  // tạo danh sách bàn cố định
+  const list = document.createElement('div');
+  list.className = 'table-select-list';
+
+  FIXED_TABLES.forEach(name => {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-secondary';
+    btn.style.margin = '5px';
+    btn.innerText = name;
+    btn.onclick = () => {
+      // khi chọn 1 bàn
+      const id = Date.now();
+      TABLES.push({ id, name, cart: [] });
+      saveAll();
+      createdFromMain = true;
+      // đóng modal, mở order screen
+      document.body.removeChild(list);
+      openTable(id);
+    };
+    list.appendChild(btn);
+  });
+
+  // thêm nút đóng
+  const closeBtn = document.createElement('button');
+  closeBtn.innerText = 'Đóng';
+  closeBtn.className = 'btn btn-danger';
+  closeBtn.onclick = () => document.body.removeChild(list);
+  list.appendChild(document.createElement('br'));
+  list.appendChild(closeBtn);
+
+  // hiển thị như modal đơn giản
+  list.style.position = 'fixed';
+  list.style.top = '50%';
+  list.style.left = '50%';
+  list.style.transform = 'translate(-50%,-50%)';
+  list.style.background = '#fff';
+  list.style.padding = '20px';
+  list.style.zIndex = '1000';
+  list.style.border = '1px solid #ccc';
+
+  document.body.appendChild(list);
+}
+
 // init
 window.addEventListener('load', ()=>{
   if($('guest-btn')) $('guest-btn').addEventListener('click', addGuest);
-  if($('guest-visit-btn')) $('guest-visit-btn').addEventListener('click', addGuestVisit);
+  if($('guest-visit-btn')) $('guest-visit-btn').addEventListener('click', openTableModal);
   if($('cancel-order-btn')) $('cancel-order-btn').addEventListener('click', cancelOrder);
   if($('save-btn')) $('save-btn').addEventListener('click', saveOrder);
   if($('addmore-btn')) $('addmore-btn').addEventListener('click', addMore);

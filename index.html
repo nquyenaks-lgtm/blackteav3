@@ -5,6 +5,50 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BlackTea POS v8</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ====== Style modal chọn bàn ====== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      text-align: center;
+    }
+    .table-select-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .table-select-list button {
+      min-width: 80px;
+      min-height: 50px;
+      font-size: 16px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .table-select-list button:hover {
+      background: #0056b3;
+    }
+    .btn-danger {
+      background: #dc3545 !important;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -16,15 +60,15 @@
       </div>
     </header>
 
-<main id="table-screen">
-  <div class="guest-buttons">
-    <button id="guest-btn" class="btn btn-primary">+ Khách vãng lai</button>
-    <button id="guest-visit-btn" class="btn btn-primary">+ Khách ghé quán</button>
-  </div>
+    <main id="table-screen">
+      <div class="guest-buttons">
+        <button id="guest-btn" class="btn btn-primary">+ Khách vãng lai</button>
+        <button id="guest-visit-btn" class="btn btn-primary">+ Khách ghé quán</button>
+      </div>
 
-  <h2>Bàn đang phục vụ</h2>
-  <div id="tables" class="table-grid"></div>
-</main>
+      <h2>Bàn đang phục vụ</h2>
+      <div id="tables" class="table-grid"></div>
+    </main>
 
     <main id="menu-screen" style="display:none">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -60,7 +104,7 @@
       </div>
       <div id="pay-bill" style="margin-top:8px"></div>
       <div style="margin-top:8px">
-        <label>Chiết khấu: <input id="discount-input" placeholder="0 hoặc 5%" /></label>
+        <label>Chiết khấu: <input id="discount-input" placeholder="0 hoặc 5%" oninput="updateFinalTotal()" /></label>
       </div>
       <div style="margin-top:8px;font-weight:700">Tổng sau chiết khấu: <span id="pay-final-total">0</span> VND</div>
       <div style="margin-top:12px;display:flex;gap:8px">
@@ -135,7 +179,15 @@
       </div>
       <div id="history-container" style="margin-top:8px"></div>
     </main>
+  </div>
 
+  <!-- Modal chọn bàn -->
+  <div id="tableModal" class="modal">
+    <div class="modal-content">
+      <h3>Chọn bàn</h3>
+      <div class="table-select-list" id="tableList"></div>
+      <button class="btn btn-danger" onclick="closeTableModal()">Đóng</button>
+    </div>
   </div>
 
   <script src="app.js"></script>
