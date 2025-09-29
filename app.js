@@ -296,7 +296,7 @@ function saveOrder(){
   if(!currentTable) return;
   if(!currentTable.cart.length){ return; }
 
-  localStorage và render cập nhật
+  // ✅ Sửa chỗ này: tạo object mới để đảm bảo localStorage và render cập nhật
   TABLES = TABLES.map(t =>
       t.id === currentTable.id
           ? { ...currentTable }    // clone object hiện tại
@@ -464,8 +464,20 @@ function renderHistory(){
   });
 }
 
-// hiện danh sách bàn để chọn
+// hiện danh sách bàn để chọn (có overlay mờ nền)
 function openTableModal() {
+  // ===== Overlay mờ nền =====
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.background = 'rgba(0,0,0,0.5)'; // nền mờ
+  overlay.style.zIndex = '999';
+  document.body.appendChild(overlay);
+
+  // ===== Bảng chọn bàn =====
   const list = document.createElement('div');
   list.style.position = 'fixed';
   list.style.top = '50%';
@@ -473,7 +485,7 @@ function openTableModal() {
   list.style.transform = 'translate(-50%, -50%)';
   list.style.background = '#fff';
   list.style.padding = '20px';
-  list.style.zIndex = '1000';
+  list.style.zIndex = '1000';   // nằm trên overlay
   list.style.border = '1px solid #ccc';
   list.style.borderRadius = '8px';
   list.style.maxWidth = '95%';
@@ -481,9 +493,15 @@ function openTableModal() {
   list.style.maxHeight = '80vh';
   list.style.overflowY = 'auto';
 
-  let selectedTable = null; // Lưu bàn đang chọn
+  let selectedTable = null;
 
-  // Hàm tạo nút bàn
+  // ===== Hàm đóng modal =====
+  function closeModal() {
+    document.body.removeChild(list);
+    document.body.removeChild(overlay);
+  }
+
+  // ===== Hàm tạo nút bàn =====
   function createTableBtn(name) {
     const btn = document.createElement('button');
     btn.className = 'btn btn-secondary';
@@ -491,11 +509,9 @@ function openTableModal() {
     btn.style.transition = "0.2s";
 
     btn.onclick = () => {
-      // Bỏ highlight bàn cũ
       if (selectedTable) {
         selectedTable.className = "btn btn-secondary";
       }
-      // Highlight bàn mới
       selectedTable = btn;
       btn.className = "btn btn-success";
     };
@@ -503,7 +519,7 @@ function openTableModal() {
     return btn;
   }
 
-  // Hàm render nhóm
+  // ===== Hàm render nhóm =====
   function renderGroup(titleText, layoutFn) {
     const group = document.createElement("fieldset");
     group.style.border = "1px solid #ddd";
@@ -523,7 +539,7 @@ function openTableModal() {
     list.appendChild(group);
   }
 
-  // Nhóm Lầu
+  // ===== Nhóm Lầu =====
   renderGroup("Bàn trên lầu", (group) => {
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -535,7 +551,7 @@ function openTableModal() {
     group.appendChild(grid);
   });
 
-  // Nhóm Ngoài trời
+  // ===== Nhóm Ngoài trời =====
   renderGroup("Bàn ngoài trời", (group) => {
     const grid = document.createElement("div");
     grid.style.display = "grid";
@@ -547,22 +563,20 @@ function openTableModal() {
     group.appendChild(grid);
   });
 
-  
-  // Nhóm T / G / N hiển thị song song
+  // ===== Nhóm T / G / N song song =====
   const threeCols = document.createElement("div");
   threeCols.style.display = "flex";
   threeCols.style.gap = "15px";
   threeCols.style.marginBottom = "15px";
   threeCols.style.alignItems = "flex-start";
 
-  // Hàm tạo group nhỏ cho từng loại bàn
   function renderMiniGroup(titleText, tables) {
     const group = document.createElement("fieldset");
     group.style.border = "1px solid #ddd";
     group.style.borderRadius = "8px";
     group.style.padding = "10px";
     group.style.background = "#f9f9f9";
-    group.style.flex = "1"; // để 3 cột đều nhau
+    group.style.flex = "1";
 
     const legend = document.createElement("legend");
     legend.innerText = titleText;
@@ -582,14 +596,12 @@ function openTableModal() {
     return group;
   }
 
-  // Thêm 3 group vào hàng ngang
   threeCols.appendChild(renderMiniGroup("Bàn tường", ["T1","T2","T3","T4"]));
   threeCols.appendChild(renderMiniGroup("Bàn giữa", ["G1","G2","G3","G4"]));
   threeCols.appendChild(renderMiniGroup("Bàn nệm", ["N1","N2","N3","N4"]));
-
   list.appendChild(threeCols);
 
-  // Nút hành động
+  // ===== Nút hành động =====
   const actions = document.createElement("div");
   actions.style.display = "flex";
   actions.style.justifyContent = "flex-end";
@@ -599,7 +611,7 @@ function openTableModal() {
   const cancelBtn = document.createElement('button');
   cancelBtn.innerText = 'Huỷ';
   cancelBtn.className = 'btn btn-outline-secondary';
-  cancelBtn.onclick = () => document.body.removeChild(list);
+  cancelBtn.onclick = closeModal;
 
   const confirmBtn = document.createElement('button');
   confirmBtn.innerText = 'Chọn bàn';
@@ -619,7 +631,7 @@ function openTableModal() {
     const id = Date.now();
     TABLES.push({ id, name, cart: [] });
     saveAll();
-    document.body.removeChild(list);
+    closeModal();
     createdFromMain = true;
     openTable(id);
   };
@@ -630,6 +642,7 @@ function openTableModal() {
 
   document.body.appendChild(list);
 }
+
 
 
 
