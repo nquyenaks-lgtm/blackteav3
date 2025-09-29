@@ -1,5 +1,6 @@
 // BlackTea POS v8 final - full logic with payment preview, discount, history filter and expandable history items
 let selectedTable = null;
+let isAddingMore = false;
 const KEY_MENU = 'BT8_MENU';
 const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
@@ -253,15 +254,23 @@ function openTable(id){
   renderCategories();
   renderMenuList();
   renderCart();
-  if(createdFromMain){
-    $('primary-actions').style.display = 'flex';
-    $('table-actions').style.display = 'none';
-    $('menu-list').style.display = 'block';
+  if (createdFromMain) {
+  $('primary-actions').style.display = 'flex';
+  $('table-actions').style.display = 'none';
+  $('menu-list').style.display = 'block';
+
+  // 👉 chỉ ẩn nút Huỷ đơn khi đang ở chế độ thêm món
+  if (isAddingMore) {
+    $('cancel-order-btn').style.display = 'none';
   } else {
-    $('primary-actions').style.display = 'none';
-    $('table-actions').style.display = 'flex';
-    $('menu-list').style.display = 'none';
+    $('cancel-order-btn').style.display = 'inline-block';
   }
+} else {
+  $('primary-actions').style.display = 'none';
+  $('table-actions').style.display = 'flex';
+  $('menu-list').style.display = 'none';
+}
+
 }
 
 // back
@@ -337,8 +346,19 @@ function saveOrder() {
 }
 
 // table actions
-function addMore(){ if(!currentTable) return; $('menu-list').style.display='block'; createdFromMain = true; $('primary-actions').style.display='flex'; $('table-actions').style.display='none'; renderMenuList(); }
+function addMore(){ 
+  if(!currentTable) return; 
+  $('menu-list').style.display='block'; 
+  createdFromMain = true; 
+  $('primary-actions').style.display='flex'; 
+  $('table-actions').style.display='none'; 
 
+  // Ẩn nút Hủy đơn khi bấm Thêm món
+  const cancelBtn = $('cancel-order-btn');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+
+  renderMenuList(); 
+}
 function payTable(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } // open payment screen with bill preview
   $('menu-screen').style.display='none'; $('payment-screen').style.display='block';
   $('pay-table-name').innerText = currentTable.name;
