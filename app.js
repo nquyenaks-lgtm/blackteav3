@@ -79,30 +79,20 @@ let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
 ];
 
 let CATEGORIES = JSON.parse(localStorage.getItem(KEY_CATS)) || ["Tất cả","Cà phê","Trà sữa","Sinh tố","Sữa chua","Giải khát","Topping"];
-let TABLES = JSON.parse(localStorage.getItem(KEY_TABLES)) || [];
-let HISTORY = JSON.parse(localStorage.getItem(KEY_HISTORY)) || [];
-let GUEST_CNT = parseInt(localStorage.getItem(KEY_GUEST) || '0');
 
-let currentTable = null;
-let createdFromMain = false;
-let activeCategory = 'Tất cả';
+let TABLES = JSON.parse(localStorage.getItem(KEY_TABLES)) || []; let HISTORY = JSON.parse(localStorage.getItem(KEY_HISTORY)) || []; let GUEST_CNT = parseInt(localStorage.getItem(KEY_GUEST) || '0');
 
-// helpers
-function $(id){ return document.getElementById(id); }
-function fmtV(n){ return n.toLocaleString('vi-VN'); }
-function nowStr(){ return new Date().toLocaleString('vi-VN'); }
-function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
-function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
-function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
+let currentTable = null; let createdFromMain = false; let activeCategory = 'Tất cả';
 
-// render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
-function renderTables(){
-  const div = $('tables');
-  div.innerHTML = '';
-  if(!TABLES.length){
-    div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
-    return;
-  }
+// helpers function $(id){ return document.getElementById(id); } function fmtV(n){ return n.toLocaleString('vi-VN'); } function nowStr(){ return new Date().toLocaleString('vi-VN'); } function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; } function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; } function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
+
+// format table name for main screen function formatTableName(name) { if (name.startsWith("L")) return "Bàn trên lầu " + name; if (name.startsWith("NT")) return "Bàn ngoài trời " + name; if (name.startsWith("T")) return "Bàn tường " + name; if (name.startsWith("G")) return "Bàn giữa " + name; if (name.startsWith("N")) return "Bàn nệm " + name; return name; }
+
+// render tables function renderTables(){ const div = $('tables'); div.innerHTML = ''; if(!TABLES.length){ div.innerHTML = '
+
+Chưa có bàn nào
+
+'; return; } TABLES.forEach(t=>{ const card = document.createElement('div'); card.className='table-card'; const info = document.createElement('div'); info.className='table-info'; const name = document.createElement('div'); name.className='table-name'; name.innerText = formatTableName(t.name); info.appendChild(name); if(t.cart && t.cart.length){ let qty=0, total=0; t.cart.forEach(it=>{ qty+=it.qty; total+=it.qty*it.price; }); const meta = document.createElement('div'); meta.className='table-meta'; meta.innerText = qty + ' món • ' + fmtV(total) + ' VND'; info.appendChild(meta); } card.appendChild(info); card.onclick = ()=> openTableFromMain(t.id); div.appendChild(card); }); } 
 
   // nhóm L (4 cột)
   const groupL = TABLES.filter(t => t.name.startsWith('L'))
