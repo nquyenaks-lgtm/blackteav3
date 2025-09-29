@@ -108,35 +108,40 @@ function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localS
 function renderTables(){
   const div = $('tables');
   div.innerHTML = '';
-  if(!TABLES.length){
-    div.innerHTML = '<div class="small">Chưa có bàn nào</div>';
+
+  // Chỉ lấy bàn có món
+  const activeTables = TABLES.filter(t => t.cart && t.cart.length > 0);
+
+  if (!activeTables.length) {
+    div.innerHTML = '<div class="small">Chưa có bàn nào đang phục vụ</div>';
     return;
   }
 
-  // nhóm L (4 cột)
-  const groupL = TABLES.filter(t => t.name.startsWith('L'))
-                       .sort((a,b)=> a.name.localeCompare(b.name));
-  if(groupL.length){
+  // Nhóm L (4 cột)
+  const groupL = activeTables.filter(t => t.name.startsWith('L'))
+    .sort((a,b)=>a.name.localeCompare(b.name));
+  if (groupL.length) {
     const row = document.createElement('div');
     row.className = 'table-section table-section-4';
-    groupL.forEach(t => row.appendChild(makeTableCard(t)));
+    groupL.forEach(t=>row.appendChild(makeTableCard(t)));
     div.appendChild(row);
   }
 
-  // nhóm NT (2 cột)
-  const groupNT = TABLES.filter(t => t.name.startsWith('NT'))
-                        .sort((a,b)=> a.name.localeCompare(b.name));
-  if(groupNT.length){
+  // Nhóm NT (2 cột)
+  const groupNT = activeTables.filter(t => t.name.startsWith('NT'))
+    .sort((a,b)=>a.name.localeCompare(b.name));
+  if (groupNT.length) {
     const row = document.createElement('div');
     row.className = 'table-section table-section-2';
-    groupNT.forEach(t => row.appendChild(makeTableCard(t)));
+    groupNT.forEach(t=>row.appendChild(makeTableCard(t)));
     div.appendChild(row);
   }
 
-  // nhóm T, G, N (mỗi bàn một hàng dọc)
+  // Nhóm T, G, N (mỗi bàn 1 hàng)
   ['T','G','N'].forEach(prefix=>{
-    const g = TABLES.filter(t => t.name.startsWith(prefix) && !(prefix === 'N' && t.name.startsWith('NT')))
-                    .sort((a,b)=> a.name.localeCompare(b.name));
+    const g = activeTables.filter(t =>
+      t.name.startsWith(prefix) && !(prefix==='N' && t.name.startsWith('NT'))
+    ).sort((a,b)=>a.name.localeCompare(b.name));
     g.forEach(t=>{
       const row = document.createElement('div');
       row.className = 'table-section table-section-1';
@@ -145,22 +150,22 @@ function renderTables(){
     });
   });
 
-  // ===== nhóm "khác" (bàn tạm, khách mang đi, khách ghé quán, tên do người dùng) =====
-  const others = TABLES.filter(t =>
+  // Nhóm khác
+  const others = activeTables.filter(t =>
     !t.name.startsWith('L') &&
     !t.name.startsWith('NT') &&
     !t.name.startsWith('T') &&
     !t.name.startsWith('G') &&
     !t.name.startsWith('N')
-  ).sort((a,b)=> a.name.localeCompare(b.name));
-
-  if(others.length){
+  ).sort((a,b)=>a.name.localeCompare(b.name));
+  if (others.length) {
     const row = document.createElement('div');
     row.className = 'table-section table-section-others';
-    others.forEach(t => row.appendChild(makeTableCard(t)));
+    others.forEach(t=>row.appendChild(makeTableCard(t)));
     div.appendChild(row);
   }
 }
+
 
 
 // helper tạo thẻ bàn (dùng trong renderTables)
@@ -274,8 +279,17 @@ function openTable(id){
 }
 
 // back
-function backToTables(){
-  currentTable = null; createdFromMain = false;
+function backToTables() {
+  if (currentTable) {
+    // Nếu bàn mới tạo mà chưa có món => xóa luôn
+    if (createdFromMain && (!currentTable.cart || currentTable.cart.length === 0)) {
+      TABLES = TABLES.filter(t => t.id !== currentTable.id);
+    }
+  }
+
+  currentTable = null;
+  createdFromMain = false;
+
   $('menu-screen').style.display = 'none';
   $('settings-screen').style.display = 'none';
   $('menu-settings-screen').style.display = 'none';
@@ -283,6 +297,7 @@ function backToTables(){
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
   $('table-screen').style.display = 'block';
+
   renderTables();
   saveAll();
 }
