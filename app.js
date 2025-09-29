@@ -1,6 +1,5 @@
 // BlackTea POS v8 final - full logic with payment preview, discount, history filter and expandable history items
 let selectedTable = null;
-let takeAwayCart = [];
 const KEY_MENU = 'BT8_MENU';
 const KEY_CATS = 'BT8_CATS';
 const KEY_TABLES = 'BT8_TABLES';
@@ -95,25 +94,6 @@ function nowStr(){ return new Date().toLocaleString('vi-VN'); }
 function isoDateKey(t){ const d = new Date(t); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+day; }
 function displayDateFromISO(iso){ const parts = iso.split('-'); return parts[2] + '/' + parts[1] + '/' + parts[0]; }
 function saveAll(){ localStorage.setItem(KEY_MENU, JSON.stringify(MENU)); localStorage.setItem(KEY_CATS, JSON.stringify(CATEGORIES)); localStorage.setItem(KEY_TABLES, JSON.stringify(TABLES)); localStorage.setItem(KEY_HISTORY, JSON.stringify(HISTORY)); localStorage.setItem(KEY_GUEST, String(GUEST_CNT)); }
-function saveTakeAwayOrder() {
-  if (!takeAwayCart || takeAwayCart.length === 0) {
-    alert("Chưa có món để lưu đơn!");
-    return;
-  }
-
-  // Tạo một "bàn ảo" cho khách mang đi
-  const id = Date.now();
-  const name = "Mang đi " + id; // hoặc bạn đổi thành "Mang đi 1, 2, 3..."
-
-  TABLES.push({ id, name, cart: [...takeAwayCart] });
-  saveAll();
-
-  alert("Đơn mang đi đã được lưu!");
-
-  // Reset giỏ hàng sau khi lưu
-  takeAwayCart = [];
-  renderTakeAwayCart(); // gọi lại hàm vẽ giỏ hàng khách mang đi (nếu bạn có hàm này)
-}
 
 // render tables (sắp xếp: L = 4 cột, NT = 2 cột, T/G/N = mỗi bàn 1 hàng dọc)
 function renderTables(){
@@ -313,22 +293,18 @@ function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!current
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
 function saveOrder(){
-  if (!currentTable) return;
-  if (!currentTable.cart.length) { 
-    return; 
-  }
+  if(!currentTable) return;
+  if(!currentTable.cart.length){ return; }
 
-  // kiểm tra xem bàn đã có trong TABLES chưa
-  const idx = TABLES.findIndex(t => t.id === currentTable.id);
-  if (idx >= 0) {
-    // đã tồn tại → cập nhật lại
-    TABLES[idx] = { ...currentTable };
-  } else {
-    // chưa có → thêm mới (trường hợp khách mang đi hoặc bàn vừa tạo)
-    TABLES.push({ ...currentTable });
-  }
+  // tạo object mới để đảm bảo localStorage và render cập nhật
+  TABLES = TABLES.map(t =>
+      t.id === currentTable.id
+          ? { ...currentTable }    // clone object hiện tại
+          : t
+  );
 
   saveAll();
+  renderTables();
   backToTables();
 }
 
