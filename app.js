@@ -292,7 +292,20 @@ function renderCart(){ const ul = $('cart-list'); ul.innerHTML = ''; if(!current
 // primary actions (new table)
 function cancelOrder(){ if(!currentTable) return; currentTable.cart=[]; renderMenuList(); renderCart(); }
 
-function saveOrder(){ if(!currentTable) return; if(!currentTable.cart.length){ return; } TABLES = TABLES.map(t=> t.id===currentTable.id ? currentTable : t); saveAll(); backToTables(); }
+function saveOrder(){
+  if(!currentTable) return;
+  if(!currentTable.cart.length){ return; }
+
+  // ✅ Sửa chỗ này: tạo object mới để đảm bảo localStorage và render cập nhật
+  TABLES = TABLES.map(t =>
+      t.id === currentTable.id
+          ? { ...currentTable }    // clone object hiện tại
+          : t
+  );
+
+  saveAll();
+  backToTables();
+}
 
 // table actions
 function addMore(){ if(!currentTable) return; $('menu-list').style.display='block'; createdFromMain = true; $('primary-actions').style.display='flex'; $('table-actions').style.display='none'; renderMenuList(); }
