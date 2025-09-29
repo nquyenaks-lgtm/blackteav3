@@ -99,9 +99,9 @@ let MENU = JSON.parse(localStorage.getItem(KEY_MENU)) || [
   { id: 69, name: "Matcha khoai môn", price: 25000, cat: "Matcha" },
   { id: 70, name: "Matcha sữa dừa", price: 25000, cat: "Matcha" },
   // --- Ăn vặt ---
-  { id: 71, name: "Bánh tráng ruốc nhỏ ", price: 17000, cat: "Ăn vặt " },
-  { id: 72, name: "Bánh tráng ruốc lớn", price: 30000, cat: "Ăn vặt " },
-  { id: 73, name: "Bánh tráng chấm", price: 15000, cat: "Ăn vặt " },
+  { id: 71, name: "Bánh tráng ruốc nhỏ ", price: 17000, cat: "Ăn vặt" },
+  { id: 72, name: "Bánh tráng ruốc lớn", price: 30000, cat: "Ăn vặt" },
+  { id: 73, name: "Bánh tráng chấm", price: 15000, cat: "Ăn vặt" },
   // --- Topping ---
   { id: 74, name: "Thêm topping", price: 5000, cat: "Topping" },
   { id: 75, name: "Kem cheese", price: 5000, cat: "Topping" },
