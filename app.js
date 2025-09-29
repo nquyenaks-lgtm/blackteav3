@@ -243,8 +243,7 @@ function backToTables(){
   $('history-screen').style.display = 'none';
   $('payment-screen').style.display = 'none';
   $('table-screen').style.display = 'block';
-  dedupeTablesKeepLatest();
-renderTables();
+  renderTables();
   saveAll();
 }
 
@@ -587,6 +586,19 @@ function openTableModal() {
   confirmBtn.innerText = 'Chọn bàn';
   confirmBtn.className = 'btn btn-primary';
   confirmBtn.onclick = () => {
+  if (!selectedTable) {
+    alert("Vui lòng chọn một bàn trước!");
+    return;
+  }
+  const name = selectedTable.innerText;
+  let existing = TABLES.find(t => t.name === name);
+  if (existing) {
+    document.body.removeChild(list);
+    createdFromMain = false;
+    openTable(existing.id);
+    return;
+  }
+
     if (!selectedTable) {
       alert("Vui lòng chọn một bàn trước!");
       return;
@@ -625,6 +637,5 @@ window.addEventListener('load', ()=>{
   if($('pay-btn')) $('pay-btn').addEventListener('click', payTable);
   if($('history-date')) $('history-date').addEventListener('change', ()=> renderHistory());
   const brand = document.getElementById('brand'); if(brand) brand.addEventListener('click', ()=> backToTables());
-  dedupeTablesKeepLatest();
-renderTables(); renderCategories(); populateCatSelect(); renderMenuSettings(); saveAll();
+  renderTables(); renderCategories(); populateCatSelect(); renderMenuSettings(); saveAll();
 });
