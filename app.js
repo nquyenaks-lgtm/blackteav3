@@ -147,12 +147,21 @@ function makeTableCard(t){
 
   const name = document.createElement('div');
   name.className = 'table-name';
-  name.innerText = t.name;
+
+  // Hiển thị tên dài hơn trong danh sách “Bàn đang phục vụ”
+  let displayName = t.name;
+  if (t.name.startsWith('L'))      displayName = `Bàn trên lầu ${t.name}`;
+  else if (t.name.startsWith('NT')) displayName = `Bàn ngoài trời ${t.name}`;
+  else if (t.name.startsWith('T'))  displayName = `Bàn tường ${t.name}`;
+  else if (t.name.startsWith('G'))  displayName = `Bàn giữa ${t.name}`;
+  else if (t.name.startsWith('N'))  displayName = `Bàn nệm ${t.name}`;
+
+  name.innerText = displayName;
   info.appendChild(name);
 
   if(t.cart && t.cart.length){
-    let qty=0, total=0;
-    t.cart.forEach(it=>{ qty += it.qty; total += it.qty * it.price; });
+    let qty = 0, total = 0;
+    t.cart.forEach(it => { qty += it.qty; total += it.qty * it.price; });
     const meta = document.createElement('div');
     meta.className = 'table-meta';
     meta.innerText = qty + ' món • ' + fmtV(total) + ' VND';
@@ -161,11 +170,8 @@ function makeTableCard(t){
 
   card.appendChild(info);
 
-  // click: highlight + mở bàn
-  card.onclick = ()=> {
-    document.querySelectorAll('.table-card').forEach(c=>{
-      c.classList.remove('active');
-    });
+  card.onclick = () => {
+    document.querySelectorAll('.table-card').forEach(c => c.classList.remove('active'));
     card.classList.add('active');
     openTableFromMain(t.id);
   };
