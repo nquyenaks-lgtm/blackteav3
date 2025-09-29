@@ -88,6 +88,14 @@ let createdFromMain = false;
 let activeCategory = 'Tất cả';
 
 // helpers
+function showCustomAlert(msg) {
+  document.getElementById("customAlertMessage").innerText = msg;
+  document.getElementById("customAlert").style.display = "block";
+}
+
+function closeCustomAlert() {
+  document.getElementById("customAlert").style.display = "none";
+}
 function $(id){ return document.getElementById(id); }
 function fmtV(n){ return n.toLocaleString('vi-VN'); }
 function nowStr(){ return new Date().toLocaleString('vi-VN'); }
@@ -645,7 +653,7 @@ function openTableModal() {
     const name = selectedTable.innerText;
 
     if (TABLES.some(t => t.name === name)) {
-      alert("Bàn " + name + " đã được mở!");
+      showCustomAlert("Bàn " + name + " đã mở hãy chọn bàn khác hoặc vào đơn hàng của bàn này bấm thêm món");
       return;
     }
 
